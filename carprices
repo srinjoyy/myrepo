@@ -1,0 +1,21 @@
+import numpy as np 
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+df=pd.read_csv("carprices.csv")
+
+# plt.scatter(df['Age(yrs)'],df['Sell Price($)'])                           #use matplotlib
+# plt.show()
+
+x=df[['Mileage','Age(yrs)']]
+y=df['Sell Price($)']
+
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2)           #traintestsplit
+
+reg=LinearRegression()
+reg.fit(x_train,y_train)
+
+print(reg.predict(x_test))
+print(reg.score(x_test,y_test))                                             #another way

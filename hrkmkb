@@ -1,0 +1,24 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+import math
+
+df=pd.read_csv('salary_hr.csv')
+# print(df)
+
+med_exp=df.experience.mean()
+med_t_s=df.test_score.mean()
+df.experience=df.experience.fillna(med_exp)
+df.test_score=df.test_score.fillna(med_t_s)
+# print(df)
+
+reg=LinearRegression()
+reg.fit(df[['experience','test_score','interview_score']],df.salary)
+
+# print(reg.predict())
+print(reg.score(df[['experience','test_score','interview_score']],df.salary))
+
+# plt.scatter(df['interview_score'],df.salary)
+# plt.show()

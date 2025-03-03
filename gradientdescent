@@ -1,0 +1,22 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+df= pd.read_csv("homeprices.csv")
+# print(df)
+dummies=pd.get_dummies(df.town)
+# print(dummies)
+
+merge_columns=pd.concat([df,dummies],axis='columns')
+# print(merge_columns)
+final=merge_columns.drop(['town',''],axis='columns')
+# print(final)
+reg=LinearRegression()
+X=final.drop('price',axis='columns')
+y=final.price
+reg.fit(X,y)
+
+# print(reg.predict([[3000,0,1]]))
+# print(reg.score(df[['town','area']],df[['price']]))
+print(reg.score(X,y))

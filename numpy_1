@@ -1,0 +1,25 @@
+import numpy as np 
+# import sys
+# l=range(1000)                #range of numbers till 1000
+# print(sys.getsizeof(5)*len(l))
+# a=np.arange(1000)
+# print(a.size*a.itemsize)
+
+# a=np.array([[1,2],[3,4]])
+# b=np.array([[5,6],[7,8]])
+# print(np.max(a))             #max
+# print(np.max(b))
+# print(np.sqrt(b))            #square root
+# s=np.ones((3,3))             #identity matrix
+# t=np.zeros((3,4))            #zero matrix
+# print(s)
+# r=np.reshape(a,(4,1))        #reshapes the matrix
+# print(r)
+# print(a.dtype)               #checks the data type. to change the data type dtype='float'
+# n=np.linspace(1,100,5)       #equally spaced array
+# print(n)
+# print(a.dot(b))              #dot product of a and b
+# print(b.ravel())             #flattens the matrix
+# a=range(0,100,4)             #range function
+# print(a[24])
+# print(np.std(a))             #standard deviation
