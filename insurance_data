@@ -1,0 +1,19 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+df=pd.read_csv("insurance_data.csv")
+df.head()
+
+# plt.scatter(df.age,df.bought_insurance)
+# plt.show()
+
+X_train, x_test, Y_train, y_test=train_test_split(df[['age']],df.bought_insurance,test_size=0.2)
+model=LogisticRegression()
+model.fit(X_train,Y_train)
+
+print(x_test)
+print(model.predict(x_test))
+print(model.score(df[['age']],df['bought_insurance']))
