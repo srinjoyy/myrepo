@@ -1,0 +1,26 @@
+import numpy as np 
+import pandas as pd 
+from sklearn.preprocessing import LabelEncoder
+from sklearn import tree
+
+df=pd.read_csv(r"C:\Users\HP\Python\DecisionTrees\salaries.csv")
+# print(df.head(7))
+
+inputs = df.drop(df[['salary_more_then_100k']],axis='columns')
+target=df[['salary_more_then_100k']]
+
+le_company =LabelEncoder()
+le_job=LabelEncoder()
+le_degree=LabelEncoder()
+
+inputs['company_n']=le_company.fit_transform(df['company'])
+inputs['job_n']=le_job.fit_transform(df['job'])
+inputs['degree_n']=le_degree.fit_transform(df['degree'])
+# inputs.head(8)
+inputs_n = inputs.drop(df[['company','job','degree']],axis='columns')
+
+# print(inputs_n.head(5))
+model=tree.DecisionTreeClassifier()
+model.fit(inputs_n,target)
+print(model.predict([[2,0,1]]))
+print(model.score(inputs_n,target))
