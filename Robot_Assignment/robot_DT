@@ -17,7 +17,7 @@ X_train, X_test, y_train, y_test= train_test_split(X,y,test_size=0.3,random_stat
 model = tree.DecisionTreeClassifier(max_depth=5, min_samples_split=10, min_samples_leaf=5, random_state=16)
 model.fit(X_train,y_train)
 
-print(X_train)
-print(X_test)
+# print(X_train)
+# print(X_test)
 print(model.predict(X_test))
 print(model.score(X_test,y_test))
