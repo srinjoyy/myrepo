@@ -1,0 +1,27 @@
+import pandas as pd 
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+
+df= pd.read_csv(r"C:\Users\HP\Python\titanic\train.csv")
+df.head()
+
+df.drop(['PassengerId','Name','SibSp','Parch','Ticket','Cabin','Embarked'],axis='columns',inplace=True)
+df.head()
+
+target=df.Survived
+inputs=df.drop('Survived',axis='columns')
+dummies=pd.get_dummies(inputs.Sex)
+dummies.head(3)
+inputs = pd.concat([inputs,dummies],axis='columns')
+inputs.head(3)
+inputs.drop(['Sex','male'],axis='columns',inplace=True)
+inputs.head(3)
+inputs.Age = inputs.Age.fillna(inputs.Age.mean())
+inputs.head()
+
+X_train, X_test, y_train, y_test= train_test_split(inputs,target,test_size=0.2)
+model = GaussianNB()
+model.fit(X_train,y_train)
+print(model.score(X_test,y_test))
+print(model.predict(y_test[[:10]]))
