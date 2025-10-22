@@ -1,0 +1,13 @@
+import numpy as np 
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn import preprocessing
+
+df=pd.read_csv(r"C:\Users\HP\Python\Homeprice_BLR\homeprices_banglore.csv")
+df.head()
+
+sx= preprocessing.MinMaxScaler()
+sy= preprocessing.MinMaxScaler()
+
+scaled_X=sx.fit_transform(df.drop('price',axis='columns'))
+scaled_Y=sy.fit_transform(df['price'].values.reshape(df.shape[0],1))
