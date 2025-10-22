@@ -1,0 +1,65 @@
+import pandas as pd
+import numpy as np
+import datetime
+
+# --- 1. Simulation Configuration ---
+NUM_CUSTOMERS = 1000
+NUM_COUNTERS = 5
+
+print("Starting supermarket simulation...")
+
+# --- 2. Create Customer Data ---
+# Customers arrive randomly over a 12-hour period (43200 seconds)
+arrival_times_seconds = np.sort(np.random.randint(0, 43200, NUM_CUSTOMERS))
+arrival_datetimes = [datetime.datetime(2025, 9, 22, 9, 0, 0) + datetime.timedelta(seconds=int(s)) for s in arrival_times_seconds]
+
+# Each customer has a random number of items
+items_in_cart = np.random.randint(1, 75, size=NUM_CUSTOMERS)
+
+customers = pd.DataFrame({
+    'arrival_time': arrival_datetimes,
+    'items_in_cart': items_in_cart
+})
+
+# --- 3. Simulate the Queue ---
+# Keep track of when each counter will be free
+counters_free_time = [customers.loc[0, 'arrival_time']] * NUM_COUNTERS
+results = []
+
+for index, customer in customers.iterrows():
+    # Find the earliest available counter
+    best_counter_idx = np.argmin(counters_free_time)
+    
+    # Service can't start before the customer arrives OR the counter is free
+    start_time = max(customer['arrival_time'], counters_free_time[best_counter_idx])
+    
+    # Calculate service time based on items (e.g., 3 seconds per item + 30s for payment)
+    # Add a little randomness
+    service_time_seconds = (customer['items_in_cart'] * 3) + 30 + np.random.randint(-10, 10)
+    service_time = datetime.timedelta(seconds=service_time_seconds)
+
+    finish_time = start_time + service_time
+    
+    # Update the time this counter will be free next
+    counters_free_time[best_counter_idx] = finish_time
+    
+    # Calculate wait time
+    wait_time_seconds = (start_time - customer['arrival_time']).total_seconds()
+    
+    results.append({
+        'arrival_time': customer['arrival_time'],
+        'items_in_cart': customer['items_in_cart'],
+        'start_time': start_time,
+        'finish_time': finish_time,
+        'wait_time_minutes': wait_time_seconds / 60,
+        'service_time_minutes': service_time_seconds / 60
+    })
+
+df_simulated = pd.DataFrame(results)
+
+# Save the new, high-quality dataset
+output_file = 'supermarket_simulation_data.csv'
+df_simulated.to_csv(output_file, index=False)
+
+print(f"-> Success! New dataset saved as '{output_file}'")
+print(df_simulated.head())

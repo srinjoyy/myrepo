@@ -1,0 +1,56 @@
+import pandas as pd
+from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.model_selection import train_test_split
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+TUNED_MAX_DEPTH = 4
+TUNED_MIN_SAMPLES_LEAF = 3
+
+simulated_file = r'C:\Users\HP\Python\Project_IE\supermarket_simulation_data.csv'
+df = pd.read_csv(simulated_file)
+
+df['arrival_time'] = pd.to_datetime(df['arrival_time'])
+df['finish_time'] = pd.to_datetime(df['finish_time'])
+df['total_time_in_system'] = (df['finish_time'] - df['arrival_time']).dt.total_seconds() / 60
+df['hour_of_day'] = df['arrival_time'].dt.hour
+
+hourly_avg_items = df.groupby('hour_of_day')['items_in_cart'].mean().reset_index()###
+plt.figure(figsize=(12, 7))
+sns.barplot(data=hourly_avg_items, x='hour_of_day', y='items_in_cart', palette='viridis')
+plt.title('Average Number of Items in Cart by Hour of the Day')
+plt.xlabel('Hour of the Day (24-hour format)')
+plt.ylabel('Average Number of Items in Cart')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+# Save the plot
+plt.savefig('avg_items_by_hour.png')
+print("Plot saved as 'avg_items_by_hour.png'\n")
+df['items_in_cart']=df['items_in_cart']/max(df['items_in_cart'])
+df['hour_of_day']=df['hour_of_day']/max(df['hour_of_day'])
+features = ['hour_of_day', 'items_in_cart']
+
+target = 'total_time_in_system'
+X = df[features]
+y = df[target]
+
+x_train,x_test,y_train,y_test=train_test_split(X,y,test_size=0.15,random_state=42)
+
+model = DecisionTreeRegressor(
+    max_depth=TUNED_MAX_DEPTH,
+    min_samples_leaf=TUNED_MIN_SAMPLES_LEAF,
+    random_state=42
+)
+
+# Prediction at different times
+model.fit(x_train,y_train)
+print("Accuracy",model.score(x_test,y_test))
+k=model.predict([[10,35]])
+
+if k>3:
+    print("Please move to an empty counter")
+else:
+    print("Stay in the same counter")
+

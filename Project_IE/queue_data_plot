@@ -1,0 +1,50 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+# Import the GradientBoostingRegressor
+from sklearn.ensemble import GradientBoostingRegressor
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# --- Model Parameters ---
+# Gradient Boosting has different parameters to tune, but the defaults are often strong.
+
+# --- Data Preparation ---
+simulated_file = r'C:\Users\HP\Python\Project_IE\supermarket_simulation_data.csv'
+df = pd.read_csv(simulated_file)
+
+df['arrival_time'] = pd.to_datetime(df['arrival_time'])
+df['finish_time'] = pd.to_datetime(df['finish_time'])
+df['total_time_in_system'] = (df['finish_time'] - df['arrival_time']).dt.total_seconds() / 60
+df['hour_of_day'] = df['arrival_time'].dt.hour
+
+# NOTE: Gradient Boosting models (like Decision Trees) do not require feature scaling.
+# Using the original, unscaled features is better and simpler.
+features = ['hour_of_day', 'items_in_cart']
+target = 'total_time_in_system'
+X = df[features]
+y = df[target]
+
+# --- Training the Model ---
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.15, random_state=42)
+
+# Use the GradientBoostingRegressor instead of DecisionTree or RandomForest
+model = GradientBoostingRegressor(n_estimators=100, random_state=42)
+
+model.fit(x_train, y_train)
+score = model.score(x_test, y_test)
+print(f"Model trained. R-squared score with Gradient Boosting: {score:.3f}")
+print(model.predict([[10,63]]))
+
+# --- Plotting the Results ---
+# print("\n--- Generating plot ---")
+# predictions = model.predict(x_test)
+# plt.figure(figsize=(8, 8))
+# sns.scatterplot(x=y_test, y=predictions, alpha=0.7, label='Model Predictions')
+# plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], '--r', linewidth=2, label='Perfect Prediction')
+# plt.xlabel("Actual Total Time (Minutes)")
+# plt.ylabel("Predicted Total Time (Minutes)")
+# plt.title("Actual vs. Predicted (Gradient Boosting)")
+# plt.legend()
+# plt.grid(True)
+# plt.savefig('predictions_vs_actual_gbm.png')
+# print("Plot saved as 'predictions_vs_actual_gbm.png'")
