@@ -1,0 +1,44 @@
+# import fastf1
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# event=fastf1.get_event(2023,20)
+# session=event.get_race() 
+# session.load()
+# lap_ver=session.laps.pick_driver('VER')[['LapNumber','LapTime']]
+# lap_ham=session.laps.pick_driver('HAM')[['LapNumber','LapTime']]
+
+# lap_ver['Driver']='VER'
+# lap_ham['Driver']='HAM'
+
+# combined_laps = pd.concat([lap_ver, lap_ham])
+# combined_laps['LapTime'] = combined_laps['LapTime'].dt.total_seconds()
+# combined_laps = combined_laps.dropna(subset=['LapTime'])
+# combined_laps.to_excel('ver_ham_laptimes.xlsx', index=False)
+
+# import sys
+# print(sys.executable)
+
+df=pd.read_excel(r'C:\Users\HP\Python\Project_F1\ver_ham_laptimes.xlsx')
+df.head()
+
+import matplotlib.pyplot as plt
+
+# Filter laps by driver
+laps_ver = df[df['Driver'] == 'VER']
+laps_ham = df[df['Driver'] == 'HAM']
+
+plt.figure(figsize=(12, 6))
+
+# Plot lap times as lines
+plt.plot(laps_ver['LapNumber'], laps_ver['LapTime'], marker='o', label='Verstappen', color='red')
+plt.plot(laps_ham['LapNumber'], laps_ham['LapTime'], marker='o', label='Hamilton', color='blue')
+
+plt.xlabel('Lap Number')
+plt.ylabel('Lap Time (seconds)')
+plt.title('Lap Time Comparison (Line Graph): Verstappen vs Hamilton')
+plt.legend()
+plt.grid(True)
+
+plt.show()
